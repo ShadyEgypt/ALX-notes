@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
+    
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="#">simple shell</a>
@@ -23,10 +24,7 @@
         </ul>
       </div>
     </nav>
-    
 
-
-    
 
     <h1>Everything you need to know to start coding your own shell</h1>
 
@@ -130,6 +128,27 @@
 
     <p>Write a program that prints all the arguments, without using&nbsp;<code>ac</code>.</p>
 
+    <div class="answer">
+        <p>Here's a sample program in C that prints all the command-line arguments without using <code>ac</code>:</p>
+
+        <pre><b><b>
+            #include &lt;stdio.h&gt;
+            #include &lt;stdlib.h&gt;
+
+            int main(int argc, char *argv[]) {
+                int i;
+                for (i = 1; i &lt; argc; i++) {
+                    printf("%s ", argv[i]);
+                }
+                printf("\n");
+                return 0;
+            }
+        </b></b>
+        </pre>
+
+        <p>This program uses <code>argc</code> to determine the number of command-line arguments passed to the program, and <code>argv</code> to access each individual argument as a string. The <code>for</code> loop starts at index 1 (skipping the first argument, which is the name of the program itself) and prints each argument to the console using <code>printf()</code>. The loop ends when <code>i</code> reaches <code>argc</code>, which is the total number of arguments passed to the program. Finally, a newline character is printed to the console to end the line.</p>
+    </div>
+
     <h4>1. Read line</h4>
 
     <p>Write a program that prints&nbsp;<code>"$ "</code>, wait for the user to enter a command, prints it on the next line.</p>
@@ -148,7 +167,55 @@
     julien@ubuntu:~/c/shell$ 
     </pre>
 
+    <div class="answer">
+        <p>Here's a sample program in C that prints <code>$</code>, waits for the user to enter a command, and prints the command on the next line:</p>
 
+        <pre><b><b>
+            #include &lt;stdio.h&gt;
+
+            int main() {
+                char command[100];
+                printf("$ ");
+                fgets(command, 100, stdin);
+                printf("%s", command);
+                return 0;
+            }
+        </b></b>
+        </pre>
+
+        <p>This program uses the <code>printf()</code> function to print the <code>$</code> symbol to the console. It then uses the <code>fgets()</code> function to read a line of input from the user, storing it in the <code>command</code> character array. The <code>fgets()</code> function reads up to 100 characters (including any whitespace or newline characters) from the standard input stream (<code>stdin</code>), which is typically the keyboard. Finally, the program uses <code>printf()</code> again to print the entered command on the next line.</p>
+
+        <p>Note that this program reads input until the user presses the "Enter" key. If you want to read a single character at a time without waiting for the "Enter" key, you can use the <code>getchar()</code> function instead of <code>fgets()</code>.</p>
+    </div>
+
+    <div class="answer">
+        <p>Sure! Here's an updated version of the program that uses <code>getline()</code> to read a line of input from the user:</p>
+
+        <pre>
+        <b><b>
+            #include &lt;stdio.h&gt;
+            #include &lt;stdlib.h&gt;
+
+            int main() {
+                char *command = NULL;
+                size_t bufsize = 0;
+                printf("$ ");
+                getline(&command, &bufsize, stdin);
+                printf("%s", command);
+                free(command);
+                return 0;
+            }
+        </b></b>
+        </pre>
+
+        <p>This program first declares a pointer to a character (<code>char *command</code>) and initializes it to <code>NULL</code>. It also declares a <code>size_t</code> variable <code>bufsize</code> and initializes it to <code>0</code>.</p>
+
+        <p>The program then uses <code>printf()</code> to print the <code>$</code> symbol to the console, prompting the user to enter a command. It then uses <code>getline()</code> to read a line of input from the user, storing it in the <code>command</code> variable. The <code>getline()</code> function dynamically allocates memory to <code>command</code> to hold the input, based on the value of <code>bufsize</code>.</p>
+
+        <p>Finally, the program uses <code>printf()</code> to print the entered command on the next line, and frees the dynamically allocated memory using <code>free()</code> to prevent memory leaks.</p>
+
+        <p>Note that <code>getline()</code> automatically handles input longer than the size of the buffer, and returns a pointer to the dynamically allocated memory holding the input. This makes it more robust than <code>fgets()</code>.</p>
+    </div>
 
     <h4>2. command line to av</h4>
 
@@ -157,6 +224,104 @@
     <p>man&nbsp;<code>strtok</code></p>
 
     <p><em>#advanced</em>: Write the function without&nbsp;<code>strtok</code></p>
+
+    <div class="answer">
+        <p>Sure, <code>strtok()</code> is a function in the C standard library that is used to split a string into tokens based on a set of delimiters. Here are the arguments that <code>strtok()</code> takes:</p>
+
+        <ol><li><code>str</code>: A pointer to the string to be tokenized. This string should be null-terminated.</li><li><code>delimiters</code>: A string of characters that serve as delimiters for the tokens. <code>strtok()</code> will split the input string into tokens based on any of the characters in this string.</li><li><code>saveptr</code>: A pointer to a <code>char*</code> variable that is used internally by <code>strtok()</code> to keep track of the current position in the input string. The first time <code>strtok()</code> is called with <code>str</code> as the input string, this argument should be set to <code>NULL</code>. For subsequent calls, the value of <code>saveptr</code> should be the same as the value returned by the previous call to <code>strtok()</code>.</li></ol>
+
+        <p>Here's an example of how to use <code>strtok()</code> to split a string into tokens based on a comma delimiter:</p>
+
+        <pre>
+        #include &lt;stdio.h&gt;
+        #include &lt;string.h&gt;
+
+        int main() {
+            char str[] = "apple,banana,orange";
+            const char delimiters[] = ",";
+            
+            char* token = strtok(str, delimiters);  // First call to strtok()
+            while (token != NULL) {
+                printf("%s\n", token);
+                token = strtok(NULL, delimiters);  // Subsequent calls to strtok()
+            }
+            
+            return 0;
+        }
+        </pre>
+
+        <p>In this example, the <code>str</code> pointer points to a string containing the words "apple", "banana", and "orange", separated by commas. The <code>delimiters</code> string contains a single comma character, which serves as the delimiter for the tokens.</p>
+
+        <p>The program uses <code>strtok()</code> to split the input string into tokens. The first call to <code>strtok()</code> takes <code>str</code> as the input string, and returns a pointer to the first token in the string ("apple"). The program then loops through the tokens, printing each one to the console with <code>printf()</code>. Each subsequent call to <code>strtok()</code> takes <code>NULL</code> as the input string, and returns a pointer to the next token in the string, until there are no more tokens left to return.</p>
+    </div>
+    <div class="answer">
+        <p>Here's a sample function in C that uses <code>strtok()</code> to split a string into words and return an array of those words:</p>
+
+        <pre>
+            <b><b>
+                #include &lt;stdio.h&gt;
+                #include &lt;stdlib.h&gt;
+                #include &lt;string.h&gt;
+
+                char** split_string(char* str, const char* delimiters, int* num_words) {
+                    char* token;
+                    int count = 0;
+                    
+                    // Count the number of words
+                    token = strtok(str, delimiters);
+                    while (token != NULL) {
+                        count++;
+                        token = strtok(NULL, delimiters);
+                    }
+                    
+                    // Allocate memory for the array of words
+                    char** words = (char**) malloc(count * sizeof(char*));
+                    if (words == NULL) {
+                        perror("Failed to allocate memory");
+                        exit(1);
+                    }
+                    
+                    // Split the string into words and store them in the array
+                    token = strtok(str, delimiters);
+                    int i = 0;
+                    while (token != NULL) {
+                        words[i] = token;
+                        i++;
+                        token = strtok(NULL, delimiters);
+                    }
+                    
+                    // Set the number of words
+                    *num_words = count;
+                    
+                    return words;
+                }
+
+                int main() {
+                    char str[] = "The quick brown fox";
+                    const char delimiters[] = " ";
+                    int num_words;
+                    
+                    char** words = split_string(str, delimiters, &num_words);
+                    
+                    int i;
+                    for (i = 0; i &lt; num_words; i++) {
+                        printf("%s\n", words[i]);
+                    }
+                    
+                    free(words);
+                    return 0;
+                }
+            </b></b>
+        </pre>
+
+        <p>The <code>split_string()</code> function takes three arguments: the input string (<code>str</code>), a string of delimiters to split the string on (<code>delimiters</code>), and a pointer to an integer that will hold the number of words in the resulting array (<code>num_words</code>). The function returns a pointer to an array of pointers to characters (<code>char**</code>), where each element of the array is a pointer to one of the words in the input string.</p>
+
+        <p>The function first uses <code>strtok()</code> to count the number of words in the input string, by repeatedly calling <code>strtok()</code> with <code>str</code> as the first argument and <code>delimiters</code> as the second argument, until <code>strtok()</code> returns <code>NULL</code>. It then allocates memory for an array of <code>char*</code> pointers with <code>malloc()</code>, using the count of words as the size of the array.</p>
+
+        <p>The function then uses <code>strtok()</code> again to split the input string into words, by repeatedly calling <code>strtok()</code> with <code>str</code> as the first argument and <code>delimiters</code> as the second argument, and storing the returned pointer in successive elements of the <code>words</code> array. Finally, it sets the <code>num_words</code> variable to the count of words, and returns a pointer to the <code>words</code> array.</p>
+
+        <p>The <code>main()</code> function provides an example of how to use <code>split_string()</code>. It declares a string <code>str</code> and a string of delimiters <code>delimiters</code>, and calls <code>split_string()</code> with these arguments, as well as a pointer to an <code>int</code> variable to hold the number of words. It then loops through the resulting <code>words</code> array and prints each word to the console, before freeing the dynamically allocated memory with <code>free()</code>.</p>    
+    </div>
 
     <h2>Executing a program</h2>
 
@@ -210,6 +375,57 @@
 
     <p>The system call&nbsp;<code>fork</code>&nbsp;(man 2&nbsp;<code>fork</code>) creates a new child process, almost identical to the parent (the process that calls&nbsp;<code>fork</code>). Once&nbsp;<code>fork</code>&nbsp;successfully returns, two processes continue to run the same program, but with different stacks, datas and heaps.</p>
 
+
+    <div class="answer">
+      <p>Sure! The <code>fork()</code> system call is used in Unix-like operating systems to create a new process by duplicating the calling process. When <code>fork()</code> is called, a new child process is created that is an exact copy of the parent process.</p>
+
+      <p>The new child process has its own unique process ID (PID), but shares the same code, data, and system resources as the parent process. This means that any changes made to the memory or file system by the child process will not affect the parent process, and vice versa.</p>
+
+      <p>The <code>fork()</code> system call returns different values to the parent and child processes. In the parent process, the return value of <code>fork()</code> is the PID of the newly created child process. In the child process, the return value of <code>fork()</code> is zero.</p>
+
+      <p>Here's a simple example that demonstrates the use of <code>fork()</code>:</p>
+
+      <pre>
+        <b><b>
+          #include &lt;stdio.h&gt;
+          #include &lt;unistd.h&gt;
+
+          int main() {
+              pid_t pid;
+              
+              pid = fork();
+              
+              if (pid == -1) {
+                  perror("fork");
+                  return 1;
+              } else if (pid == 0) {
+                  // Child process
+                  printf("I am the child process (PID = %d)\n", getpid());
+              } else {
+                  // Parent process
+                  printf("I am the parent process (PID = %d)\n", getpid());
+              }
+              
+              return 0;
+          }
+        </b></b>
+      </pre>
+
+      <p>In this example, the program first calls <code>fork()</code> to create a new child process. The <code>fork()</code> function returns the PID of the child process to the parent process, and returns 0 to the child process.</p>
+
+      <p>In the parent process, the program prints a message indicating that it is the parent process, along with its own PID. In the child process, the program prints a message indicating that it is the child process, along with its own PID.</p>
+
+      <p>When this program is run, it will print two messages to the console: one from the parent process, and one from the child process. The messages will indicate the PIDs of each process, which will be different because they are separate processes.</p>
+
+      <p><b><br></b></p><p><b><b></b></b></p><b>
+
+      <p><b>
+      </b></p>
+
+      </b><p><b></b></p>  
+        
+    </div>
+    <br>
     <pre>
     julien@ubuntu:~/c/shell$ cat fork.c
     #include &lt;stdio.h&gt;
