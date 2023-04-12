@@ -1,0 +1,39 @@
+h1{
+  margin-left: 10px;
+  }
+h2, h3, h4, h5, h6{
+  margin-left: 20px;
+}
+
+pre{
+  margin-left: 50px;
+  background-color: #eeeee4;
+}
+
+p{
+  margin-left: 30px;
+}
+
+.answer{
+  background-color: #eff0f7;
+  margin: 20px;
+  border: dotted 1px black;
+  border-radius: 10px;
+  padding: 15px 0px 15px 0px;
+}
+
+.answer pre{
+  background-color: #ced1e7;
+  border-radius: 20px;
+  margin-right: 50px;
+}
+
+.answer code{
+  background-color: #ced1e7;
+  padding: 2px;
+  border-radius: 1px;
+}
+
+.answer p{
+  font-style: bold;
+}
